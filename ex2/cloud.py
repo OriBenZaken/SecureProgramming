@@ -30,6 +30,12 @@ class Cloud:
 		crypto = AES.new(self.key, AES.MODE_CTR, counter=countf)
 		self.ciphertext = crypto.encrypt(self.pt)
 
+	def Length(self):
+		"""
+		:return: length of the ciphetext
+		"""
+		return len(self.ciphertext)
+
 	def Read(self, position=0):
 		"""
 		Returns one byte at 'position' from current self.ciphertext. 

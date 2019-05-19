@@ -12,6 +12,17 @@ def breakcloud(cloud):
 	with open("plain.txt", "wb+") as file:
 		i = 0
 		old_enc_byte = cloud.Write(position=i, newbyte=b'\x00')
+		"""
+		In order to get the original plaintext we need to get the original output of
+		AES the which for the plaintext encryption.
+		In this way: ciphertext ^ AES_output_for_enc = plintext.
+		We do it by write to the cloud '\x00' bytes from byte in position 0 until byte in position len(ciphertext).
+		The cloud will xor the zeros with the AES_output_for_enc and this way we get eventually the 
+		AES_output_for_enc as the new ciphertext in the cloud.
+		In each write operation we aggregate the old ciphertext.
+		At the final step - we read the new ciphertext, which is AES_output_for_enc and xor it with the old
+		ciphertext. This is how we get the original plaintext.
+		"""
 		while old_enc_byte:
 			old_ciphertext += old_enc_byte
 			new_ciphertext += cloud.Read(position=i)
